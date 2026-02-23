@@ -8,6 +8,7 @@ class AppBottomNavBar extends StatelessWidget {
   const AppBottomNavBar({
     super.key,
     required this.currentIndex,
+    required this.pageValue,
     required this.onItemSelected,
     required this.surfaceColor,
     required this.borderColor,
@@ -16,6 +17,7 @@ class AppBottomNavBar extends StatelessWidget {
   });
 
   final int currentIndex;
+  final double pageValue;
   final ValueChanged<int> onItemSelected;
   final Color surfaceColor;
   final Color borderColor;
@@ -44,21 +46,96 @@ class AppBottomNavBar extends StatelessWidget {
             ),
           ],
         ),
-        child: Row(
-          children: List.generate(_items.length, (index) {
-            final item = _items[index];
-            return Expanded(
-              child: _GlassNavItem(
-                icon: item.icon,
-                label: item.label,
-                active: currentIndex == index,
-                textStyle: textTheme.labelLarge,
-                textSecondary: textSecondary,
-                activeSurface: surfaceColor,
-                onTap: () => onItemSelected(index),
-              ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final segmentWidth = constraints.maxWidth / _items.length;
+            final baseIndicatorWidth = segmentWidth - 12;
+            final clampedPage = pageValue.clamp(
+              0.0,
+              (_items.length - 1).toDouble(),
             );
-          }),
+            final localFrac = (clampedPage - clampedPage.floorToDouble()).abs();
+            final stretchT = (1 - ((localFrac - 0.5).abs() * 2)).clamp(0.0, 1.0);
+            final stretch = 1 + (0.14 * stretchT);
+            final indicatorWidth = baseIndicatorWidth * stretch;
+            final baseLeft = (segmentWidth * clampedPage) + 6;
+            final indicatorLeft = baseLeft - ((indicatorWidth - baseIndicatorWidth) / 2);
+
+            return Stack(
+              children: [
+                Positioned(
+                  left: indicatorLeft,
+                  top: 8,
+                  width: indicatorWidth,
+                  height: 56,
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0, end: stretchT),
+                    duration: const Duration(milliseconds: 180),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, _) {
+                      return DecoratedBox(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.24),
+                            width: 0.8,
+                          ),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Colors.white.withValues(alpha: 0.34 + (value * 0.06)),
+                              surfaceColor.withValues(alpha: 0.78),
+                            ],
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.white.withValues(alpha: 0.08 + (value * 0.05)),
+                              blurRadius: 18,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            margin: const EdgeInsets.only(top: 3),
+                            height: 1.1,
+                            width: indicatorWidth * 0.62,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(999),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withValues(alpha: 0),
+                                  Colors.white.withValues(alpha: 0.55),
+                                  Colors.white.withValues(alpha: 0),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Row(
+                  children: List.generate(_items.length, (index) {
+                    final item = _items[index];
+                    return Expanded(
+                      child: _GlassNavItem(
+                        icon: item.icon,
+                        label: item.label,
+                        active: currentIndex == index,
+                        textStyle: textTheme.labelLarge,
+                        textSecondary: textSecondary,
+                        onTap: () => onItemSelected(index),
+                      ),
+                    );
+                  }),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -83,7 +160,6 @@ class _GlassNavItem extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.textSecondary,
-    required this.activeSurface,
     required this.onTap,
     this.active = false,
     this.textStyle,
@@ -92,7 +168,6 @@ class _GlassNavItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color textSecondary;
-  final Color activeSurface;
   final VoidCallback onTap;
   final bool active;
   final TextStyle? textStyle;
@@ -111,7 +186,7 @@ class _GlassNavItem extends StatelessWidget {
         curve: Curves.easeOutCubic,
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
         decoration: BoxDecoration(
-          color: active ? activeSurface : Colors.transparent,
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(18),
         ),
         child: AnimatedScale(

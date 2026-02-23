@@ -15,7 +15,9 @@ class AppShellPage extends StatefulWidget {
 }
 
 class _AppShellPageState extends State<AppShellPage> {
+  late final PageController _pageController;
   int _currentIndex = 0;
+  double _pageValue = 0;
 
   static const List<Widget> _pages = [
     DashboardPage(),
@@ -23,10 +25,36 @@ class _AppShellPageState extends State<AppShellPage> {
     ProfilePage(),
   ];
 
-  void _onItemSelected(int index) {
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _currentIndex);
+    _pageValue = _currentIndex.toDouble();
+    _pageController.addListener(_syncPageValue);
+  }
+
+  @override
+  void dispose() {
+    _pageController.removeListener(_syncPageValue);
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _syncPageValue() {
+    final nextValue = _pageController.page ?? _currentIndex.toDouble();
+    if ((nextValue - _pageValue).abs() < 0.0001) return;
     setState(() {
-      _currentIndex = index;
+      _pageValue = nextValue;
     });
+  }
+
+  void _onItemSelected(int index) {
+    if (index == _currentIndex) return;
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 420),
+      curve: Curves.easeOutQuart,
+    );
   }
 
   @override
@@ -78,22 +106,16 @@ class _AppShellPageState extends State<AppShellPage> {
               color: AppColors.glowMint(brightness),
             ),
           ),
-          TweenAnimationBuilder<double>(
-            key: ValueKey<int>(_currentIndex),
-            tween: Tween<double>(begin: 0, end: 1),
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOutCubic,
-            child: _pages[_currentIndex],
-            builder: (context, value, child) {
-              final offsetY = (1 - value) * 10;
-              return Opacity(
-                opacity: value,
-                child: Transform.translate(
-                  offset: Offset(0, offsetY),
-                  child: child,
-                ),
-              );
+          PageView.builder(
+            controller: _pageController,
+            physics: const BouncingScrollPhysics(),
+            itemCount: _pages.length,
+            onPageChanged: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
             },
+            itemBuilder: (_, index) => _pages[index],
           ),
           Positioned(
             left: 16,
@@ -103,6 +125,7 @@ class _AppShellPageState extends State<AppShellPage> {
               top: false,
               child: AppBottomNavBar(
                 currentIndex: _currentIndex,
+                pageValue: _pageValue,
                 onItemSelected: _onItemSelected,
                 surfaceColor: glassSurfaceStrong,
                 borderColor: glassBorder,
