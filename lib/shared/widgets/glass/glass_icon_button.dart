@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../app/theme/glass_tokens.dart';
+import '../../theme/glass_tokens.dart';
 import 'glass_panel.dart';
 
 class GlassIconButton extends StatelessWidget {

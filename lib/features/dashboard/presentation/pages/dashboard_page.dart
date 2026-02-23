@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
-import '../../../../app/theme/glass_tokens.dart';
 import '../../../../shared/widgets/glass/glass_icon_button.dart';
 import '../../../../shared/widgets/glass/glass_panel.dart';
+import '../../../../shared/theme/glass_tokens.dart';
 import '../widgets/dashboard_metric_row.dart';
 
 class DashboardPage extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
-import '../theme/glass_tokens.dart';
 import '../../shared/widgets/glass/glass_panel.dart';
+import '../../shared/theme/glass_tokens.dart';
 
 class AppBottomNavBar extends StatelessWidget {
   const AppBottomNavBar({
