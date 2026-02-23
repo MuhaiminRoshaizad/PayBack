@@ -22,12 +22,14 @@ class DashboardMetricRow extends StatelessWidget {
       children: [
         Text(
           label,
-          style: textTheme.bodyLarge?.copyWith(color: textSecondary),
+          style: textTheme.bodyLarge?.copyWith(
+            color: textSecondary.withValues(alpha: 0.9),
+          ),
         ),
         Text(
           value,
           style: textTheme.bodyLarge?.copyWith(
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
             color: valueColor,
           ),
         ),

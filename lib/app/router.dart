@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../features/dashboard/presentation/pages/dashboard_page.dart';
+import 'pages/app_shell_page.dart';
 
 class AppRouter {
   const AppRouter._();
@@ -12,7 +12,7 @@ class AppRouter {
       case dashboard:
       default:
         return MaterialPageRoute<void>(
-          builder: (_) => const DashboardPage(),
+          builder: (_) => const AppShellPage(),
           settings: settings,
         );
     }

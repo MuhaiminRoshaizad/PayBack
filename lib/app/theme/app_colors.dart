@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class AppColors {
   const AppColors._();
 
-  static const Color _bgTopLight = Color(0xFFE3ECFF);
-  static const Color _bgMidLight = Color(0xFFEFF4FF);
-  static const Color _bgBottomLight = Color(0xFFF6FAFF);
-  static const Color _glowBlueLight = Color(0x804DA3FF);
-  static const Color _glowPinkLight = Color(0x66FF96BD);
-  static const Color _glowMintLight = Color(0x6654E6C6);
+  static const Color _bgTopLight = Color(0xFFDDE9FF);
+  static const Color _bgMidLight = Color(0xFFECF2FF);
+  static const Color _bgBottomLight = Color(0xFFF4F8FF);
+  static const Color _glowBlueLight = Color(0x664DA3FF);
+  static const Color _glowPinkLight = Color(0x4DFF96BD);
+  static const Color _glowMintLight = Color(0x4D54E6C6);
 
   static const Color _bgTopDark = Color(0xFF0C1221);
   static const Color _bgMidDark = Color(0xFF111A2E);
@@ -27,15 +27,15 @@ class AppColors {
   static const Color warning = Color(0xFFD97706);
   static const Color danger = Color(0xFFDC2626);
 
-  static const Color _glassSurfaceLight = Color.fromRGBO(255, 255, 255, 0.22);
+  static const Color _glassSurfaceLight = Color.fromRGBO(255, 255, 255, 0.30);
   static const Color _glassSurfaceStrongLight = Color.fromRGBO(
     255,
     255,
     255,
-    0.34,
+    0.48,
   );
-  static const Color _glassBorderLight = Color.fromRGBO(255, 255, 255, 0.40);
-  static const Color _glassShadowLight = Color.fromRGBO(15, 23, 42, 0.14);
+  static const Color _glassBorderLight = Color.fromRGBO(255, 255, 255, 0.58);
+  static const Color _glassShadowLight = Color.fromRGBO(15, 23, 42, 0.12);
 
   static const Color _glassSurfaceDark = Color.fromRGBO(255, 255, 255, 0.08);
   static const Color _glassSurfaceStrongDark = Color.fromRGBO(255, 255, 255, 0.14);
